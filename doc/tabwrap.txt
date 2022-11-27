@@ -1,0 +1,155 @@
+*tabwrap.txt*	tablineの設定を簡易化するプラグイン
+
+==============================================================================
+目次						*tabwrap-contents*
+
+概要				|tabwrap-introduction|
+使い方				|tabwrap-usage|
+変数				|tabwrap-variables|
+設定				|tabwrap-settings|
+関数				|tabwrap-functions|
+
+
+------------------------------------------------------------------------------
+概要						*tabwrap-introduction*
+
+'tabline'の設定を簡易化するプラグインです。
+各変数に値を設定するだけでタブラインの表示内容を変更できます。
+
+
+------------------------------------------------------------------------------
+使い方						*tabwrap-usage*
+
+	以下の例のようにカスタマイズが可能です。
+>
+	" ファイル名が設定されていないときに「無題」と表示
+	let g:tabwrap#file_noname = '無題'
+
+	" tablineの末尾に右寄せでタブを閉じるボタンを表示
+	let g:tabwrap#label_after =  '%=!xx![X]!XX!'
+
+	" カレントタブ以外のラベルにタブ番号とファイル名のみ表示
+	let g:tabwrap#label_tab = '!t!!f!'
+
+	" カレントタブのラベルにタブ番号とファイル名のみ表示
+	let g:tabwrap#label_select = '!t!!f!'
+<
+
+------------------------------------------------------------------------------
+変数						*tabwrap-variables*
+
+						*g:tabwrap#label_tab*
+g:tabwrap#label_tab
+	カレントタブ以外のタブの表示を設定する。
+	使用できる値は |tabwrap-settings| を参照。
+	初期値: " !t!!M!:!m! %-8.32(!f!%) "
+
+						*g:tabwrap#label_select*
+g:tabwrap#label_select
+	カレントタブの表示を設定する。
+	使用できる値は |tabwrap-settings| を参照。
+	初期値: " !t!!M!:!m! %-8.32(!f!%) "
+
+						*g:tabwrap#label_before*
+g:tabwrap#label_before
+	タブラインの先頭の表示を設定する。
+	使用できる値は |tabwrap-settings| を参照。
+	初期値: " "
+
+						*g:tabwrap#label_after*
+g:tabwrap#label_after 
+	タブラインの末尾の表示を設定する。
+	使用できる値は |tabwrap-settings| を参照。
+	初期値: "%=    %<%{fnamemodify(getcwd(), ":p:~")}"
+
+						*g:tabwrap#mark_nomodified*
+g:tabwrap#mark_nomodified
+	"!m!" で表示される文字列を設定する。
+	タブのカレントバッファの 'modified' がオフであり、
+	'modifiable' がオンの時の表示内容。
+	初期値: ""
+
+						*g:tabwrap#mark_modified*
+g:tabwrap#mark_modified
+	"!m!" で表示される文字列を設定する。
+	タブのカレントバッファの 'modified' がオンの時の表示内容。
+	初期値: "+"
+
+						*g:tabwrap#mark_nomodifiable*
+g:tabwrap#mark_nomodifiable
+	"!m!" で表示される文字列を設定する。
+	タブのカレントバッファの 'modifiable' がオフの時の表示内容。
+	初期値: "-"
+
+						*g:tabwrap#mark_tab_nomodified*
+g:tabwrap#mark_tab_nomodified
+	"!M!" で表示される文字列を設定する。
+	タブの全てのバッファの 'modified' がオフの時の表示内容。
+	タブのカレントバッファは対象外。
+	初期値: ""
+
+						*g:tabwrap#mark_tab_modified*
+g:tabwrap#mark_tab_modified
+	"!M!" で表示される文字列を設定する。
+	タブのカレントバッファ以外のいずれかの 'modified' がオンの時の表示内容。
+	初期値: "*"
+
+						*g:tabwrap#file_noname*
+g:tabwrap#file_noname
+	"!f!" で表示される文字列を設定する。
+	ファイル名がない場合の表示内容。
+	初期値: "[No Name]"
+
+						*g:tabwrap#file_scratch*
+g:tabwrap#file_scratch
+	"!f!" で表示される文字列を設定する。
+	'buftype' に "nofile" が設定されているときの表示
+	初期値: "[Scratch]"
+
+						*g:tabwrap#file_quickfix*
+g:tabwrap#file_quickfix
+	"!f!" で表示される文字列を設定する。
+	'buftype' に "quickfix" が設定されているときの表示
+	初期値: "[Quickfix List]"
+
+						*g:tabwrap#default_disable*
+g:tabwrap#default_disable
+	プラグイン読み込み時に無効化するかのフラグを設定する。
+	0以外をセットすると無効化する。
+	初期値: "0"
+
+
+------------------------------------------------------------------------------
+設定						*tabwrap-settings*
+	|g:tabwrap#label_tab|, |g:tabwrap#label_select| で使用できる値
+	'statusline' の設定に加えて以下の内容が使用できる
+	!t!	: タブの番号
+	!m!	: 修正フラグ
+	!M!	: タブ修正フラグ
+	!w!	: タブのウィンドウ数
+	!W!	: タブのウィンドウ数(複数の場合のみ表示)
+	!f!	: カレントバッファのファイル名
+	!x!	: 「タブを閉じる」の開始
+	!X!	: 「タブを閉じる」の終了
+
+	|g:tabwrap#label_tab|, |g:tabwrap#label_select|,
+	|g:tabwrap#label_before|, |g:tabwrap#label_after| で使用できる値
+	'statusline' の設定に加えて以下の内容が使用できる
+	!xx!	: カレントタブを閉じるの開始
+	!XX!	: タブを閉じるの終了
+
+
+------------------------------------------------------------------------------
+関数						*tabwrap-functions*
+
+						*tabwrap#create_tabline()*
+tabwrap#create_tabline()
+	'tabline' を生成します。
+	プラグイン読み込み時に 'tabline' に設定されますが
+	|g:tabwrap#default_disable| に0以外を設定している場合は
+	以下の設定でタブの表示内容に反映されます
+>
+	set tabline=%!tabwrap#create_tabline()
+<
+
+vim:tw=78:ts=8:ft=help:norl
